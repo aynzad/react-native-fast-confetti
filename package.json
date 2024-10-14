@@ -86,13 +86,15 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+    "@shopify/react-native-skia": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-reanimated": "*"
   },
   "workspaces": [
     "example"
   ],
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.5.0",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
