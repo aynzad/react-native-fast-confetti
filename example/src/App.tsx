@@ -1,17 +1,25 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-fast-confetti';
+import { useRef } from 'react';
+import { StyleSheet, View, Button } from 'react-native';
+import { Confetti } from 'react-native-fast-confetti';
+import type { ConfettiMethods } from 'react-native-fast-confetti';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const confettiRef = useRef<ConfettiMethods>(null);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Confetti
+        ref={confettiRef}
+        autoplay={true}
+        autoStartDelay={0}
+        count={200}
+        duration={4000}
+        colors={['red', 'blue']}
+      />
+      <Button title="Resume" onPress={() => confettiRef.current?.resume()} />
+      <Button title="Pause" onPress={() => confettiRef.current?.pause()} />
+      <Button title="Restart" onPress={() => confettiRef.current?.restart()} />
+      <Button title="Reset" onPress={() => confettiRef.current?.reset()} />
     </View>
   );
 }
@@ -21,10 +29,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });

@@ -1,3 +1,3 @@
-export function multiply(a: number, b: number): Promise<number> {
-  return Promise.resolve(a * b);
-}
+export type { ConfettiMethods, ConfettiProps } from './types';
+
+export { Confetti } from './Confetti';

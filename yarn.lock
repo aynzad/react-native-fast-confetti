@@ -810,7 +810,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-arrow-functions@npm:^7.0.0, @babel/plugin-transform-arrow-functions@npm:^7.25.7":
+"@babel/plugin-transform-arrow-functions@npm:^7.0.0, @babel/plugin-transform-arrow-functions@npm:^7.0.0-0, @babel/plugin-transform-arrow-functions@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/plugin-transform-arrow-functions@npm:7.25.7"
   dependencies:
@@ -869,7 +869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-class-properties@npm:^7.25.7":
+"@babel/plugin-transform-class-properties@npm:^7.0.0-0, @babel/plugin-transform-class-properties@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/plugin-transform-class-properties@npm:7.25.7"
   dependencies:
@@ -893,7 +893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-classes@npm:^7.0.0, @babel/plugin-transform-classes@npm:^7.25.7":
+"@babel/plugin-transform-classes@npm:^7.0.0, @babel/plugin-transform-classes@npm:^7.0.0-0, @babel/plugin-transform-classes@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/plugin-transform-classes@npm:7.25.7"
   dependencies:
@@ -1156,7 +1156,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-nullish-coalescing-operator@npm:^7.25.8":
+"@babel/plugin-transform-nullish-coalescing-operator@npm:^7.0.0-0, @babel/plugin-transform-nullish-coalescing-operator@npm:^7.25.8":
   version: 7.25.8
   resolution: "@babel/plugin-transform-nullish-coalescing-operator@npm:7.25.8"
   dependencies:
@@ -1214,7 +1214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-optional-chaining@npm:^7.25.7, @babel/plugin-transform-optional-chaining@npm:^7.25.8":
+"@babel/plugin-transform-optional-chaining@npm:^7.0.0-0, @babel/plugin-transform-optional-chaining@npm:^7.25.7, @babel/plugin-transform-optional-chaining@npm:^7.25.8":
   version: 7.25.8
   resolution: "@babel/plugin-transform-optional-chaining@npm:7.25.8"
   dependencies:
@@ -1383,7 +1383,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-shorthand-properties@npm:^7.0.0, @babel/plugin-transform-shorthand-properties@npm:^7.25.7":
+"@babel/plugin-transform-shorthand-properties@npm:^7.0.0, @babel/plugin-transform-shorthand-properties@npm:^7.0.0-0, @babel/plugin-transform-shorthand-properties@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/plugin-transform-shorthand-properties@npm:7.25.7"
   dependencies:
@@ -1428,7 +1428,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-template-literals@npm:^7.25.7":
+"@babel/plugin-transform-template-literals@npm:^7.0.0-0, @babel/plugin-transform-template-literals@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/plugin-transform-template-literals@npm:7.25.7"
   dependencies:
@@ -1488,7 +1488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-unicode-regex@npm:^7.0.0, @babel/plugin-transform-unicode-regex@npm:^7.25.7":
+"@babel/plugin-transform-unicode-regex@npm:^7.0.0, @babel/plugin-transform-unicode-regex@npm:^7.0.0-0, @babel/plugin-transform-unicode-regex@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/plugin-transform-unicode-regex@npm:7.25.7"
   dependencies:
@@ -1632,7 +1632,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.13.0, @babel/preset-typescript@npm:^7.23.0, @babel/preset-typescript@npm:^7.24.7":
+"@babel/preset-typescript@npm:^7.13.0, @babel/preset-typescript@npm:^7.16.7, @babel/preset-typescript@npm:^7.23.0, @babel/preset-typescript@npm:^7.24.7":
   version: 7.25.7
   resolution: "@babel/preset-typescript@npm:7.25.7"
   dependencies:
@@ -3493,6 +3493,48 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shopify/react-native-skia@npm:1.2.3":
+  version: 1.2.3
+  resolution: "@shopify/react-native-skia@npm:1.2.3"
+  dependencies:
+    canvaskit-wasm: "npm:0.39.1"
+    react-reconciler: "npm:0.27.0"
+  peerDependencies:
+    react: ">=18.0"
+    react-native: ">=0.64"
+    react-native-reanimated: ">=2.0.0"
+  peerDependenciesMeta:
+    react-native:
+      optional: true
+    react-native-reanimated:
+      optional: true
+  bin:
+    setup-skia-web: scripts/setup-canvaskit.js
+  checksum: 10/4540392d5fdb2f4dab553d1abd627ac60e32f65e4f30e9f19d9e95573cfac033bfea4c498323ec6a4d531e0362fd17834b607abb3c34b7cc20e678fd5d29b0a0
+  languageName: node
+  linkType: hard
+
+"@shopify/react-native-skia@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@shopify/react-native-skia@npm:1.4.2"
+  dependencies:
+    canvaskit-wasm: "npm:0.39.1"
+    react-reconciler: "npm:0.27.0"
+  peerDependencies:
+    react: ">=18.0"
+    react-native: ">=0.64"
+    react-native-reanimated: ">=2.0.0"
+  peerDependenciesMeta:
+    react-native:
+      optional: true
+    react-native-reanimated:
+      optional: true
+  bin:
+    setup-skia-web: ./scripts/setup-canvaskit.js
+  checksum: 10/018ed569bb2523ed49b088d32b251c0f7307c459cf5d11bcc71c35f73f38a050bbb027744623d561e854aa0102275e850ec372f672c72f1f0c911b30df305be1
+  languageName: node
+  linkType: hard
+
 "@sideway/address@npm:^4.1.5":
   version: 4.1.5
   resolution: "@sideway/address@npm:4.1.5"
@@ -3966,6 +4008,13 @@ __metadata:
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 10/db9d611a5c66afa0b9953d2d622ad19b191da631841a1a3231d1a837ff1bd756e26cb87569e9f124d5503866f36c77f2bc33fa2f86fba20b1b61bd476be9261b
+  languageName: node
+  linkType: hard
+
+"@webgpu/types@npm:0.1.21":
+  version: 0.1.21
+  resolution: "@webgpu/types@npm:0.1.21"
+  checksum: 10/73fc5f2bebb1abf084b146c26c237c6450747b8119cdf3733643ff90968f6e7790d0ae0ad6aa6dc7b0783a502571d348a76d22c8e8466b3b7f7c9ee956da7e5b
   languageName: node
   linkType: hard
 
@@ -5028,6 +5077,15 @@ __metadata:
   version: 1.0.30001668
   resolution: "caniuse-lite@npm:1.0.30001668"
   checksum: 10/4a14acbc999a855e6a91a3ae4ca670f202ceabb4b0e75f8eaef153fafe33ae5ea0de7ac99c078d6b724c8f60b14b1ea24d7c544398e5fd077c418e3f029559ff
+  languageName: node
+  linkType: hard
+
+"canvaskit-wasm@npm:0.39.1":
+  version: 0.39.1
+  resolution: "canvaskit-wasm@npm:0.39.1"
+  dependencies:
+    "@webgpu/types": "npm:0.1.21"
+  checksum: 10/962f0ec74717eabd7de196a3397215f34fd6b8e9cfc1781c00d0f61695cc7521a77e7c80db061ec9cd6e92774db835edb7f6bed9ea69457ef7cceb08caad8aac
   languageName: node
   linkType: hard
 
@@ -12557,12 +12615,14 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@expo/metro-runtime": "npm:~3.2.3"
+    "@shopify/react-native-skia": "npm:1.2.3"
     expo: "npm:~51.0.28"
     expo-status-bar: "npm:~1.12.1"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
     react-native: "npm:0.74.5"
     react-native-builder-bob: "npm:^0.30.2"
+    react-native-reanimated: "npm:~3.10.1"
     react-native-web: "npm:~0.19.10"
   languageName: unknown
   linkType: soft
@@ -12575,6 +12635,7 @@ __metadata:
     "@evilmartians/lefthook": "npm:^1.5.0"
     "@react-native/eslint-config": "npm:^0.73.1"
     "@release-it/conventional-changelog": "npm:^5.0.0"
+    "@shopify/react-native-skia": "npm:^1.4.2"
     "@types/jest": "npm:^29.5.5"
     "@types/react": "npm:^18.2.44"
     commitlint: "npm:^17.0.2"
@@ -12587,6 +12648,7 @@ __metadata:
     react: "npm:18.2.0"
     react-native: "npm:0.74.5"
     react-native-builder-bob: "npm:^0.30.2"
+    react-native-reanimated: "npm:^3.15.5"
     release-it: "npm:^15.0.0"
     typescript: "npm:^5.2.2"
   peerDependencies:
@@ -12596,6 +12658,49 @@ __metadata:
     react-native-reanimated: "*"
   languageName: unknown
   linkType: soft
+
+"react-native-reanimated@npm:^3.15.5":
+  version: 3.15.5
+  resolution: "react-native-reanimated@npm:3.15.5"
+  dependencies:
+    "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
+    "@babel/plugin-transform-class-properties": "npm:^7.0.0-0"
+    "@babel/plugin-transform-classes": "npm:^7.0.0-0"
+    "@babel/plugin-transform-nullish-coalescing-operator": "npm:^7.0.0-0"
+    "@babel/plugin-transform-optional-chaining": "npm:^7.0.0-0"
+    "@babel/plugin-transform-shorthand-properties": "npm:^7.0.0-0"
+    "@babel/plugin-transform-template-literals": "npm:^7.0.0-0"
+    "@babel/plugin-transform-unicode-regex": "npm:^7.0.0-0"
+    "@babel/preset-typescript": "npm:^7.16.7"
+    convert-source-map: "npm:^2.0.0"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+    react: "*"
+    react-native: "*"
+  checksum: 10/e516405ed52f1d4f844680e3c403bb3e57447be18df0e684d775eb25baa4563678f88fab32553f1c0242e3bbbe0a5566750a60241ac609634b2ab5489b401284
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated@npm:~3.10.1":
+  version: 3.10.1
+  resolution: "react-native-reanimated@npm:3.10.1"
+  dependencies:
+    "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
+    "@babel/plugin-transform-nullish-coalescing-operator": "npm:^7.0.0-0"
+    "@babel/plugin-transform-optional-chaining": "npm:^7.0.0-0"
+    "@babel/plugin-transform-shorthand-properties": "npm:^7.0.0-0"
+    "@babel/plugin-transform-template-literals": "npm:^7.0.0-0"
+    "@babel/preset-typescript": "npm:^7.16.7"
+    convert-source-map: "npm:^2.0.0"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+    react: "*"
+    react-native: "*"
+  checksum: 10/bb2a0802fd619999dd5d1dd9734875fc14699de29d3537003997e85040dd3a0b430716192388c71544d600fc7abf243af1cfc24ce2513c282b046e8bb3430125
+  languageName: node
+  linkType: hard
 
 "react-native-web@npm:~0.19.10":
   version: 0.19.12
@@ -12666,6 +12771,18 @@ __metadata:
   bin:
     react-native: cli.js
   checksum: 10/3ffd5ec753749bc1d9f4f072547dc7e475f6e6be17a6a3f21698479b5143aaaa1c90e07175b11ed20480e75419b7c0bdd07d66477f2a1e4dca9d5f5c3d926eb0
+  languageName: node
+  linkType: hard
+
+"react-reconciler@npm:0.27.0":
+  version: 0.27.0
+  resolution: "react-reconciler@npm:0.27.0"
+  dependencies:
+    loose-envify: "npm:^1.1.0"
+    scheduler: "npm:^0.21.0"
+  peerDependencies:
+    react: ^18.0.0
+  checksum: 10/7c4bfd76b0ba7802fefaa0fc8b93610eae20044693af85e8a1d605faad4d82fa47b8ffe4af409c67d45d0c9d93a8f0ed407ae506163fc5e4ab3145bdec0d5602
   languageName: node
   linkType: hard
 
@@ -13333,6 +13450,15 @@ __metadata:
   dependencies:
     loose-envify: "npm:^1.1.0"
   checksum: 10/862881c8d3ece854331516cc048e26a86af461e896ab412506a5b1ffcc82990a08445e0127545ab524df15f88c2a691d8505fc2226a9bddf99bf8a8425bdcc0e
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "scheduler@npm:0.21.0"
+  dependencies:
+    loose-envify: "npm:^1.1.0"
+  checksum: 10/216dbe36490f8c3133eee8352061803c377de6eb80d4a8f7f290819a721a21135aba145db28ad3e34056115f1a8c0d7e1cd477cebd3d01f6d98e28cc31fc702a
   languageName: node
   linkType: hard
 
