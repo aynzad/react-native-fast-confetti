@@ -12,6 +12,7 @@ import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
   cancelAnimation,
   interpolate,
+  useDerivedValue,
   useSharedValue,
   withRepeat,
   withTiming,
@@ -39,15 +40,22 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       duration = DEFAULT_DURATION,
       colors = DEFAULT_COLORS,
       autoStartDelay = DEFAULT_AUTOSTART_DELAY,
+      onAnimationEnd,
+      onAnimationStart,
       width: _width,
       height: _height,
       autoplay = true,
+      fadeOutOnEnd = false,
     },
     ref
   ) => {
     const paddingBetweenRows = 30;
 
     const progress = useSharedValue(0);
+    const opacity = useDerivedValue(() => {
+      if (!fadeOutOnEnd) return 1;
+      return interpolate(progress.value, [0, 0.7, 1], [1, 0, 0]);
+    }, [fadeOutOnEnd]);
     const running = useSharedValue(false);
     const { width: DEFAULT_SCREEN_WIDTH, height: DEFAULT_SCREEN_HEIGHT } =
       useWindowDimensions();
@@ -69,9 +77,11 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     };
 
     const restart = () => {
-      reset();
+      progress.value = 0;
       running.value = true;
-      progress.value = withRepeat(withTiming(1, { duration }), -1, false);
+      if (autoplay)
+        progress.value = withRepeat(withTiming(1, { duration }), -1, false);
+      else progress.value = withTiming(1, { duration });
     };
 
     const resume = () => {
@@ -81,8 +91,12 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       running.value = true;
       progress.value = withTiming(1, { duration: remaining }, (finished) => {
         if (finished) {
+          onAnimationEnd?.();
           progress.value = 0;
-          progress.value = withRepeat(withTiming(1, { duration }), -1, false);
+          if (autoplay) {
+            onAnimationStart?.();
+            progress.value = withRepeat(withTiming(1, { duration }), -1, false);
+          }
         }
       });
     };
@@ -204,7 +218,12 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     return (
       <View pointerEvents="none" style={styles.container}>
         <Canvas style={styles.canvasContainer}>
-          <Atlas image={texture} sprites={sprites} transforms={transforms} />
+          <Atlas
+            image={texture}
+            sprites={sprites}
+            transforms={transforms}
+            opacity={opacity}
+          />
         </Canvas>
       </View>
     );

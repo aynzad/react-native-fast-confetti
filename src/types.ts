@@ -42,6 +42,18 @@ export type ConfettiProps = {
    * @default 0
    */
   autoStartDelay?: number;
+  /**
+   * @description Should the confetti flakes fade out as they reach the bottom.
+   */
+  fadeOutOnEnd?: boolean;
+  /**
+   * @description A callback that is called when the falling animation starts.
+   */
+  onAnimationStart?: () => void;
+  /**
+   * @description A callback that is called when the falling animation starts.
+   */
+  onAnimationEnd?: () => void;
 };
 
 export type ConfettiMethods = {

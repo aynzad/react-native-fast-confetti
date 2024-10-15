@@ -12,6 +12,7 @@ export default function App() {
         ref={confettiRef}
         autoplay={true}
         autoStartDelay={0}
+        fadeOutOnEnd={false}
         count={200}
         duration={4000}
         colors={['red', 'blue']}
