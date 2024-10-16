@@ -8,15 +8,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Confetti
-        ref={confettiRef}
-        autoplay={true}
-        autoStartDelay={0}
-        fadeOutOnEnd={false}
-        count={200}
-        duration={4000}
-        colors={['red', 'blue']}
-      />
+      <Confetti ref={confettiRef} />
       <Button title="Resume" onPress={() => confettiRef.current?.resume()} />
       <Button title="Pause" onPress={() => confettiRef.current?.pause()} />
       <Button title="Restart" onPress={() => confettiRef.current?.restart()} />

@@ -54,7 +54,7 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     const progress = useSharedValue(0);
     const opacity = useDerivedValue(() => {
       if (!fadeOutOnEnd) return 1;
-      return interpolate(progress.value, [0, 0.7, 1], [1, 0, 0]);
+      return interpolate(progress.value, [0, 0.9, 1], [1, 0, 0]);
     }, [fadeOutOnEnd]);
     const running = useSharedValue(false);
     const { width: DEFAULT_SCREEN_WIDTH, height: DEFAULT_SCREEN_HEIGHT } =

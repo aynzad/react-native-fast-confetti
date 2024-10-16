@@ -1,6 +1,6 @@
 export const DEFAULT_BOXES_COUNT = 200;
 
-export const DEFAULT_FLAKE_SIZE = { width: 6, height: 12 };
+export const DEFAULT_FLAKE_SIZE = { width: 8, height: 16 };
 
 export const DEFAULT_DURATION = 8000;
 
