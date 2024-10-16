@@ -1,8 +1,12 @@
 # react-native-fast-confetti
 
-The fastest confetti animation library in react native
+🏎️ The fastest confetti animation library in react native written using Skia Atlas API
 
 ## Installation
+
+> [!IMPORTANT]
+> This library depends on [react-native-reanimated](https://github.com/software-mansion/react-native-reanimated) and [@shopify/react-native-skia](https://github.com/Shopify/react-native-skia). Make sure to install those first.
+
 
 ```sh
 yarn add react-native-fast-confetti
@@ -30,7 +34,7 @@ return (
 | Name               | Required | Default Value   | Description                                                        |
 |--------------------|----------|-----------------|--------------------------------------------------------------------|
 | `count`            | No       | 200             | Number of confetti pieces to render.                               |
-| `flakeSize`        | No       | N/A             | The size of each confetti flake (object with `width` and `height`).|
+| `flakeSize`        | No       | { width: 8, height: 16 }            | The size of each confetti flake (object with `width` and `height`).|
 | `width`            | No       | SCREEN_WIDTH    | The width of the confetti's container.                             |
 | `height`           | No       | SCREEN_HEIGHT   | The height of the confetti's container.                            |
 | `duration`         | No       | 8000 ms         | The duration of the confetti animation in milliseconds.            |
