@@ -29,6 +29,7 @@ import {
   DEFAULT_COLORS,
   DEFAULT_DURATION,
   DEFAULT_FLAKE_SIZE,
+  DEFAULT_VERTICAL_SPACING,
 } from './constants';
 import type { ConfettiMethods, ConfettiProps } from './types';
 
@@ -40,6 +41,7 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       duration = DEFAULT_DURATION,
       colors = DEFAULT_COLORS,
       autoStartDelay = DEFAULT_AUTOSTART_DELAY,
+      verticalSpacing = DEFAULT_VERTICAL_SPACING,
       onAnimationEnd,
       onAnimationStart,
       width: _width,
@@ -49,8 +51,6 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     },
     ref
   ) => {
-    const paddingBetweenRows = 30;
-
     const progress = useSharedValue(0);
     const opacity = useDerivedValue(() => {
       if (!fadeOutOnEnd) return 1;
@@ -63,7 +63,7 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     const containerHeight = _height || DEFAULT_SCREEN_HEIGHT;
     const columnsNum = Math.floor(containerWidth / flakeSize.width);
     const rowsNum = Math.ceil(count / columnsNum);
-    const rowHeight = flakeSize.height + paddingBetweenRows;
+    const rowHeight = flakeSize.height + verticalSpacing;
     const verticalOffset = -rowsNum * rowHeight;
     const textureSize = {
       width: flakeSize.width * columnsNum,

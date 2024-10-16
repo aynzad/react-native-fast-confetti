@@ -47,6 +47,11 @@ export type ConfettiProps = {
    */
   fadeOutOnEnd?: boolean;
   /**
+   * @description The approximate space between confetti flakes vertically. Lower value results in denser confetti.
+   * @default 30
+   */
+  verticalSpacing?: number;
+  /**
    * @description A callback that is called when the falling animation starts.
    */
   onAnimationStart?: () => void;
