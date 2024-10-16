@@ -5,19 +5,50 @@ The fastest confetti animation library in react native
 ## Installation
 
 ```sh
-npm install react-native-fast-confetti
+yarn add react-native-fast-confetti
 ```
 
 ## Usage
 
 
-```js
-import { multiply } from 'react-native-fast-confetti';
+```tsx
+import { Confetti } from 'react-native-fast-confetti';
 
 // ...
 
-const result = await multiply(3, 7);
+return (
+    <View>
+    {...Your other components}
+    <Confetti />
+    {...Your other components}
+    </View>
+)
 ```
+
+## Props
+
+| Name               | Required | Default Value   | Description                                                        |
+|--------------------|----------|-----------------|--------------------------------------------------------------------|
+| `count`            | No       | 200             | Number of confetti pieces to render.                               |
+| `flakeSize`        | No       | N/A             | The size of each confetti flake (object with `width` and `height`).|
+| `width`            | No       | SCREEN_WIDTH    | The width of the confetti's container.                             |
+| `height`           | No       | SCREEN_HEIGHT   | The height of the confetti's container.                            |
+| `duration`         | No       | 8000 ms         | The duration of the confetti animation in milliseconds.            |
+| `autoplay`         | No       | true            | Whether the animation should play on mount.                        |
+| `colors`           | No       | N/A             | The array of confetti flakes colors.                               |
+| `autoStartDelay`   | No       | 0               | Delay before the confetti animation starts automatically (in ms).  |
+| `fadeOutOnEnd`     | No       | N/A             | Should the confetti flakes fade out as they reach the bottom.      |
+| `onAnimationStart` | No       | N/A             | Callback function triggered when the falling animation starts.      |
+| `onAnimationEnd`   | No       | N/A             | Callback function triggered when the falling animation ends.        |
+
+## Methods
+
+| Name      | Description                                          |
+|-----------|------------------------------------------------------|
+| `restart` | Start the animation from the beginning.              |
+| `pause`   | Pause the animation.                                 |
+| `reset`   | Reset the animation and prevent it from playing.     |
+| `resume`  | Resume the animation from where it paused.           |
 
 
 ## Contributing
