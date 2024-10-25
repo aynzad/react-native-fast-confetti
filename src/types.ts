@@ -3,6 +3,11 @@ export type FlakeSize = {
   height: number;
 };
 
+export type CannonPosition = {
+  x: number;
+  y: number;
+};
+
 export type ConfettiProps = {
   /**
    * @description number of confetti pieces to render.
@@ -24,10 +29,15 @@ export type ConfettiProps = {
    */
   height?: number;
   /**
-   * @description The duration of confetti animation (milliseconds).
+   * @description The duration of confetti falling down (milliseconds).
    * @default 8000
    */
-  duration?: number;
+  fallDuration?: number;
+  /**
+   * @description The duration of confetti blast (milliseconds).
+   * @default 300
+   */
+  blastDuration?: number;
   /**
    * @description Wether the animation should play on mount.
    * @default true
@@ -59,6 +69,10 @@ export type ConfettiProps = {
    * @description A callback that is called when the falling animation starts.
    */
   onAnimationEnd?: () => void;
+  /**
+   * @description An array of positions from which confetti flakes should blast.
+   */
+  cannonsPositions?: CannonPosition[];
 };
 
 export type ConfettiMethods = {

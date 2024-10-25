@@ -7,27 +7,32 @@ import {
   Canvas,
   Atlas,
 } from '@shopify/react-native-skia';
-import { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
   cancelAnimation,
+  Extrapolation,
   interpolate,
+  runOnJS,
   useDerivedValue,
   useSharedValue,
   withRepeat,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import {
-  getRandomBoolean,
-  getRandomValue,
-  randomColor,
-  randomXArray,
-} from './utils';
+import { generateBoxesArray } from './utils';
 import {
   DEFAULT_AUTOSTART_DELAY,
+  DEFAULT_BLAST_DURATION,
   DEFAULT_BOXES_COUNT,
   DEFAULT_COLORS,
-  DEFAULT_DURATION,
+  DEFAULT_FALL_DURATION,
   DEFAULT_FLAKE_SIZE,
   DEFAULT_VERTICAL_SPACING,
 } from './constants';
@@ -38,7 +43,8 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     {
       count = DEFAULT_BOXES_COUNT,
       flakeSize = DEFAULT_FLAKE_SIZE,
-      duration = DEFAULT_DURATION,
+      fallDuration = DEFAULT_FALL_DURATION,
+      blastDuration = DEFAULT_BLAST_DURATION,
       colors = DEFAULT_COLORS,
       autoStartDelay = DEFAULT_AUTOSTART_DELAY,
       verticalSpacing = DEFAULT_VERTICAL_SPACING,
@@ -48,13 +54,28 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       height: _height,
       autoplay = true,
       fadeOutOnEnd = false,
+      cannonsPositions = [],
     },
     ref
   ) => {
-    const progress = useSharedValue(0);
+    const hasCannons = cannonsPositions.length > 0;
+    const initialProgress = hasCannons ? 0 : 1;
+    const endProgress = 2;
+    const aHasCannon = useDerivedValue(() => hasCannons, [hasCannons]);
+    const aInitialProgress = useDerivedValue(
+      () => initialProgress,
+      [initialProgress]
+    );
+    const aEndProgress = useDerivedValue(() => endProgress, [endProgress]);
+    const progress = useSharedValue(initialProgress);
     const opacity = useDerivedValue(() => {
       if (!fadeOutOnEnd) return 1;
-      return interpolate(progress.value, [0, 0.9, 1], [1, 0, 0]);
+      return interpolate(
+        progress.value,
+        [1, 1.9, 2],
+        [1, 0, 0],
+        Extrapolation.CLAMP
+      );
     }, [fadeOutOnEnd]);
     const running = useSharedValue(false);
     const { width: DEFAULT_SCREEN_WIDTH, height: DEFAULT_SCREEN_HEIGHT } =
@@ -64,46 +85,125 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     const columnsNum = Math.floor(containerWidth / flakeSize.width);
     const rowsNum = Math.ceil(count / columnsNum);
     const rowHeight = flakeSize.height + verticalSpacing;
-    const verticalOffset = -rowsNum * rowHeight;
+    const columnWidth = flakeSize.width;
+    const verticalOffset = -rowsNum * rowHeight * (hasCannons ? 0.2 : 1);
     const textureSize = {
-      width: flakeSize.width * columnsNum,
-      height: flakeSize.height * rowsNum,
+      width: columnWidth * columnsNum,
+      height: rowHeight * rowsNum,
     };
-
-    const reset = () => {
-      running.value = false;
-      cancelAnimation(progress);
-      progress.value = 0;
-    };
-
-    const restart = () => {
-      progress.value = 0;
-      running.value = true;
-      if (autoplay)
-        progress.value = withRepeat(withTiming(1, { duration }), -1, false);
-      else progress.value = withTiming(1, { duration });
-    };
-
-    const resume = () => {
-      if (running.value) return;
-
-      const remaining = duration * (1 - progress.value);
-      running.value = true;
-      progress.value = withTiming(1, { duration: remaining }, (finished) => {
-        if (finished) {
-          onAnimationEnd?.();
-          progress.value = 0;
-          if (autoplay) {
-            onAnimationStart?.();
-            progress.value = withRepeat(withTiming(1, { duration }), -1, false);
-          }
-        }
-      });
-    };
+    const [boxes, setBoxes] = useState(() => generateBoxesArray(count, colors));
 
     const pause = () => {
       running.value = false;
       cancelAnimation(progress);
+    };
+
+    const reset = () => {
+      pause();
+      progress.value = initialProgress;
+    };
+
+    const refreshBoxes = useCallback(() => {
+      'worklet';
+
+      const newBoxes = generateBoxesArray(count, colors);
+      runOnJS(setBoxes)(newBoxes);
+    }, [count, colors]);
+
+    const JSOnStart = () => onAnimationStart?.();
+    const JSOnEnd = () => onAnimationEnd?.();
+
+    const UIOnEnd = () => {
+      'worklet';
+      runOnJS(JSOnEnd)();
+    };
+
+    const runAnimation = (
+      {
+        blastDuration,
+        fallDuration,
+        infinite,
+      }: {
+        blastDuration?: number;
+        fallDuration?: number;
+        infinite: boolean;
+      },
+      onEnd?: (finished: boolean | undefined) => void
+    ) => {
+      'worklet';
+
+      const animations: number[] = [];
+
+      if (blastDuration && aHasCannon.value)
+        animations.push(
+          withTiming(1, { duration: blastDuration }, (finished) => {
+            if (!fallDuration) onEnd?.(finished);
+          })
+        );
+      if (fallDuration)
+        animations.push(
+          withTiming(2, { duration: fallDuration }, (finished) => {
+            onEnd?.(finished);
+          })
+        );
+
+      const finalAnimation = withSequence(...animations);
+
+      if (infinite) return withRepeat(finalAnimation, -1, false);
+
+      return finalAnimation;
+    };
+
+    const restart = () => {
+      refreshBoxes();
+      progress.value = initialProgress;
+      running.value = true;
+      JSOnStart();
+
+      progress.value = runAnimation(
+        { infinite: autoplay, blastDuration, fallDuration },
+        (finished) => {
+          'worklet';
+          if (!finished) return;
+          UIOnEnd();
+          refreshBoxes();
+        }
+      );
+    };
+
+    const resume = () => {
+      if (running.value) return;
+      running.value = true;
+
+      const isBlasting = progress.value < 1;
+      const blastRemaining = blastDuration * (1 - progress.value);
+      const fallingRemaining = fallDuration * (2 - progress.value);
+
+      progress.value = runAnimation(
+        {
+          blastDuration: isBlasting ? blastRemaining : undefined,
+          fallDuration: isBlasting ? fallDuration : fallingRemaining,
+          infinite: false,
+        },
+        (finished) => {
+          'worklet';
+          if (!finished) return;
+          progress.value = aInitialProgress.value;
+          UIOnEnd();
+          refreshBoxes();
+
+          if (autoplay)
+            progress.value = runAnimation(
+              { infinite: true, blastDuration, fallDuration },
+              (finished) => {
+                'worklet';
+                if (!finished) return;
+                UIOnEnd();
+                refreshBoxes();
+              }
+            );
+        }
+      );
     };
 
     useImperativeHandle(ref, () => ({
@@ -112,23 +212,6 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       resume,
       restart,
     }));
-
-    const boxes = useMemo(
-      () =>
-        new Array(count).fill(0).map(() => ({
-          clockwise: getRandomBoolean(),
-          maxRotation: {
-            x: getRandomValue(2 * Math.PI, 20 * Math.PI),
-            z: getRandomValue(2 * Math.PI, 20 * Math.PI),
-          },
-          color: randomColor(colors),
-          randomXs: randomXArray(5, -50, 50), // Array of randomX values for horizontal movement
-          randomSpeed: getRandomValue(0.9, 1.3), // Random speed multiplier
-          randomOffsetX: getRandomValue(-10, 10), // Random X offset for initial position
-          randomOffsetY: getRandomValue(-10, 10), // Random Y offset for initial position
-        })),
-      [count, colors]
-    );
 
     const getPosition = (index: number) => {
       'worklet';
@@ -150,7 +233,7 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
 
           return (
             <Rect
-              key={box.maxRotation.x * box.maxRotation.z}
+              key={index}
               rect={rect(x, y, flakeSize.width, flakeSize.height)}
               color={box.color}
             />
@@ -170,37 +253,69 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       const piece = boxes[i];
       if (!piece) return;
 
+      let tx = 0,
+        ty = 0;
       const { x, y } = getPosition(i); // Already includes random offsets
-      const tx = x + piece.randomOffsetX;
-      const maxYMovement = -verticalOffset + containerHeight * 1.5; // Add extra to compensate for different speeds
-      let ty = y + piece.randomOffsetY + verticalOffset;
 
-      // Apply random speed to the fall height
-      const fallHeight = interpolate(
-        progress.value,
-        [0, 1],
-        [0, maxYMovement * piece.randomSpeed] // Use random speed here
-      );
+      if (progress.value < 1 && aHasCannon.value) {
+        // Determine the corresponding index in initialBlasts based on i and count
+        const blastIndex = Math.floor((i / count) * cannonsPositions.length);
+        const blastPosX = cannonsPositions[blastIndex]?.x || 0;
+        const blastPosY = cannonsPositions[blastIndex]?.y || 0;
 
-      // Interpolate between randomX values for smooth left-right movement
-      const randomX = interpolate(
-        progress.value,
-        [0, 0.25, 0.5, 0.75, 1],
-        piece.randomXs // Use the randomX array for horizontal movement
-      );
+        const initialRandomX = piece.randomXs[0] || 0;
+        const initialX = x + piece.randomOffsetX + initialRandomX;
+        const initialY = y + piece.randomOffsetY + verticalOffset;
+
+        tx = interpolate(
+          progress.value,
+          [0, 1],
+          [blastPosX, initialX],
+          Extrapolation.CLAMP
+        );
+        ty = interpolate(
+          progress.value,
+          [0, 1],
+          [blastPosY, initialY],
+          Extrapolation.CLAMP
+        );
+      } else {
+        tx = x + piece.randomOffsetX;
+        ty = y + piece.randomOffsetY + verticalOffset;
+        const maxYMovement = -verticalOffset + containerHeight * 1.5; // Add extra to compensate for different speeds
+
+        // Apply random speed to the fall height
+        const yChange = interpolate(
+          progress.value,
+          [1, 2],
+          [0, maxYMovement * piece.randomSpeed], // Use random speed here
+          Extrapolation.CLAMP
+        );
+        // Interpolate between randomX values for smooth left-right movement
+        const randomX = interpolate(
+          progress.value,
+          [1, 1.25, 1.5, 1.75, 2],
+          piece.randomXs, // Use the randomX array for horizontal movement
+          Extrapolation.CLAMP
+        );
+
+        tx += randomX;
+        ty += yChange;
+      }
 
       const rotationDirection = piece.clockwise ? 1 : -1;
       const rz = interpolate(
         progress.value,
-        [0, 1],
-        [0, rotationDirection * piece.maxRotation.z]
+        [aInitialProgress.value, aEndProgress.value],
+        [0, rotationDirection * piece.maxRotation.z],
+        Extrapolation.CLAMP
       );
       const rx = interpolate(
         progress.value,
-        [0, 1],
-        [0, rotationDirection * piece.maxRotation.x]
+        [aInitialProgress.value, aEndProgress.value],
+        [0, rotationDirection * piece.maxRotation.x],
+        Extrapolation.CLAMP
       );
-      ty += fallHeight;
 
       const scale = Math.abs(Math.cos(rx)); // Scale goes from 1 -> 0 -> 1
 
@@ -212,7 +327,7 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       const c = Math.cos(rz) * scale;
 
       // Use the interpolated randomX for horizontal oscillation
-      val.set(c, s, tx + randomX - c * px + s * py, ty - s * px - c * py);
+      val.set(c, s, tx - c * px + s * py, ty - s * px - c * py);
     });
 
     return (
