@@ -317,7 +317,14 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
         Extrapolation.CLAMP
       );
 
-      const scale = Math.abs(Math.cos(rx)); // Scale goes from 1 -> 0 -> 1
+      const oscillatingScale = Math.abs(Math.cos(rx)); // Scale goes from 1 -> 0 -> 1
+      const blastScale = interpolate(
+        progress.value,
+        [0, 0.2, 1],
+        [0, 1, 1],
+        Extrapolation.CLAMP
+      );
+      const scale = blastScale * oscillatingScale;
 
       const px = flakeSize.width / 2;
       const py = flakeSize.height / 2;
