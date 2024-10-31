@@ -286,9 +286,8 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
           Extrapolation.CLAMP
         );
       } else {
-        const initialRandomX = piece.randomXs[0] || 0;
         const initialRandomY = piece.initialRandomY;
-        tx = x + piece.randomOffsetX + initialRandomX;
+        tx = x + piece.randomOffsetX;
         ty = y + piece.randomOffsetY + initialRandomY + verticalOffset;
         const maxYMovement = -verticalOffset + containerHeight * 1.5; // Add extra to compensate for different speeds
 
