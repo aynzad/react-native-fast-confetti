@@ -35,6 +35,7 @@ import {
   DEFAULT_FALL_DURATION,
   DEFAULT_FLAKE_SIZE,
   DEFAULT_VERTICAL_SPACING,
+  RANDOM_INITIAL_Y_JIGGLE,
 } from './constants';
 import type { ConfettiMethods, ConfettiProps } from './types';
 
@@ -86,7 +87,10 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
     const rowsNum = Math.ceil(count / columnsNum);
     const rowHeight = flakeSize.height + verticalSpacing;
     const columnWidth = flakeSize.width;
-    const verticalOffset = -rowsNum * rowHeight * (hasCannons ? 0.2 : 1);
+    const verticalOffset =
+      -rowsNum * rowHeight * (hasCannons ? 0.2 : 1) +
+      verticalSpacing -
+      RANDOM_INITIAL_Y_JIGGLE;
     const textureSize = {
       width: columnWidth * columnsNum,
       height: rowHeight * rowsNum,
@@ -120,8 +124,8 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
 
     const runAnimation = (
       {
-        blastDuration,
-        fallDuration,
+        blastDuration: _blastDuration,
+        fallDuration: _fallDuration,
         infinite,
       }: {
         blastDuration?: number;
@@ -134,15 +138,15 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
 
       const animations: number[] = [];
 
-      if (blastDuration && aHasCannon.value)
+      if (_blastDuration && aHasCannon.value)
         animations.push(
-          withTiming(1, { duration: blastDuration }, (finished) => {
-            if (!fallDuration) onEnd?.(finished);
+          withTiming(1, { duration: _blastDuration }, (finished) => {
+            if (!_fallDuration) onEnd?.(finished);
           })
         );
-      if (fallDuration)
+      if (_fallDuration)
         animations.push(
-          withTiming(2, { duration: fallDuration }, (finished) => {
+          withTiming(2, { duration: _fallDuration }, (finished) => {
             onEnd?.(finished);
           })
         );
@@ -195,9 +199,9 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
           if (autoplay)
             progress.value = runAnimation(
               { infinite: true, blastDuration, fallDuration },
-              (finished) => {
+              (_finished) => {
                 'worklet';
-                if (!finished) return;
+                if (!_finished) return;
                 UIOnEnd();
                 refreshBoxes();
               }
@@ -264,8 +268,10 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
         const blastPosY = cannonsPositions[blastIndex]?.y || 0;
 
         const initialRandomX = piece.randomXs[0] || 0;
+        const initialRandomY = piece.initialRandomY;
         const initialX = x + piece.randomOffsetX + initialRandomX;
-        const initialY = y + piece.randomOffsetY + verticalOffset;
+        const initialY =
+          y + piece.randomOffsetY + initialRandomY + verticalOffset;
 
         tx = interpolate(
           progress.value,
@@ -280,8 +286,10 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
           Extrapolation.CLAMP
         );
       } else {
-        tx = x + piece.randomOffsetX;
-        ty = y + piece.randomOffsetY + verticalOffset;
+        const initialRandomX = piece.randomXs[0] || 0;
+        const initialRandomY = piece.initialRandomY;
+        tx = x + piece.randomOffsetX + initialRandomX;
+        ty = y + piece.randomOffsetY + initialRandomY + verticalOffset;
         const maxYMovement = -verticalOffset + containerHeight * 1.5; // Add extra to compensate for different speeds
 
         // Apply random speed to the fall height
@@ -304,18 +312,22 @@ export const Confetti = forwardRef<ConfettiMethods, ConfettiProps>(
       }
 
       const rotationDirection = piece.clockwise ? 1 : -1;
-      const rz = interpolate(
-        progress.value,
-        [aInitialProgress.value, aEndProgress.value],
-        [0, rotationDirection * piece.maxRotation.z],
-        Extrapolation.CLAMP
-      );
-      const rx = interpolate(
-        progress.value,
-        [aInitialProgress.value, aEndProgress.value],
-        [0, rotationDirection * piece.maxRotation.x],
-        Extrapolation.CLAMP
-      );
+      const rz =
+        piece.initialRotation +
+        interpolate(
+          progress.value,
+          [aInitialProgress.value, aEndProgress.value],
+          [0, rotationDirection * piece.maxRotation.z],
+          Extrapolation.CLAMP
+        );
+      const rx =
+        piece.initialRotation +
+        interpolate(
+          progress.value,
+          [aInitialProgress.value, aEndProgress.value],
+          [0, rotationDirection * piece.maxRotation.x],
+          Extrapolation.CLAMP
+        );
 
       const oscillatingScale = Math.abs(Math.cos(rx)); // Scale goes from 1 -> 0 -> 1
       const blastScale = interpolate(
